@@ -101,6 +101,43 @@
             dirDiv.innerHTML = '<a href="https://maps.app.goo.gl/vWfh4sNnKv4rRjHU8" target="_blank" rel="noopener noreferrer" style="color:#D4872C;text-decoration:none;font-weight:600;font-size:14px;">Get Directions →</a>';
             addrEl.parentNode.insertBefore(dirDiv, addrEl.nextSibling);
           }
+          // Intercept form submit: send via formsubmit.co instead of mailto
+          var form = document.querySelector('.rfq-form');
+          if (form) {
+            form.addEventListener('submit', function(e) {
+              e.preventDefault();
+              e.stopImmediatePropagation();
+              var btn = form.querySelector('.form-submit');
+              var origText = btn.innerHTML;
+              btn.innerHTML = 'Sending...';
+              btn.disabled = true;
+              // Collect form data
+              var data = new FormData(form);
+              // Add field names from React state inputs
+              var inputs = form.querySelectorAll('input, select, textarea');
+              inputs.forEach(function(inp) {
+                if (inp.id && inp.value) data.set(inp.id, inp.value);
+              });
+              fetch('https://formsubmit.co/ajax/jb@phoenix-pkg.com', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+                body: JSON.stringify(Object.fromEntries(data))
+              }).then(function(res) {
+                if (res.ok) {
+                  form.innerHTML = '<div style="text-align:center;padding:3rem 1rem;"><h3 style="color:#D4872C;margin-bottom:1rem;">RFQ Received</h3><p style="color:#666;">Thank you. We will respond within 4 business hours.</p></div>';
+                } else {
+                  btn.innerHTML = origText;
+                  btn.disabled = false;
+                  alert('Something went wrong. Please call (956) 551-6395 directly.');
+                }
+              }).catch(function() {
+                btn.innerHTML = origText;
+                btn.disabled = false;
+                alert('Something went wrong. Please call (956) 551-6395 directly.');
+              });
+              return false;
+            }, true);
+          }
         }, 500);
       });
     </script>
