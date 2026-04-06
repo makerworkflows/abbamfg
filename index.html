@@ -79,10 +79,22 @@
             el.href = 'tel:+19565516395';
             el.textContent = '(956) 551-6395';
           });
-          // Add directions link after address
+          // Wrap address text in Google Maps link
           var details = document.querySelectorAll('.contact-detail');
           if (details.length > 0) {
             var addrEl = details[0];
+            var addrP = addrEl.querySelector('p');
+            if (addrP) {
+              var link = document.createElement('a');
+              link.href = 'https://maps.app.goo.gl/vWfh4sNnKv4rRjHU8';
+              link.target = '_blank';
+              link.rel = 'noopener noreferrer';
+              link.style.color = 'inherit';
+              link.style.textDecoration = 'none';
+              link.innerHTML = addrP.innerHTML;
+              addrP.innerHTML = '';
+              addrP.appendChild(link);
+            }
             var dirDiv = document.createElement('div');
             dirDiv.className = 'contact-detail';
             dirDiv.style.marginTop = '8px';
