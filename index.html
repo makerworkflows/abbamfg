@@ -70,5 +70,27 @@
       }
     </script>
     <div id="root"></div>
+    <script>
+      // Post-render: add Google Maps link to address and ensure phone is Martin's
+      document.addEventListener('DOMContentLoaded', function() {
+        setTimeout(function() {
+          // Fix any remaining old phone numbers
+          document.querySelectorAll('a[href="tel:+19562231070"]').forEach(function(el) {
+            el.href = 'tel:+19565516395';
+            el.textContent = '(956) 551-6395';
+          });
+          // Add directions link after address
+          var details = document.querySelectorAll('.contact-detail');
+          if (details.length > 0) {
+            var addrEl = details[0];
+            var dirDiv = document.createElement('div');
+            dirDiv.className = 'contact-detail';
+            dirDiv.style.marginTop = '8px';
+            dirDiv.innerHTML = '<a href="https://maps.app.goo.gl/vWfh4sNnKv4rRjHU8" target="_blank" rel="noopener noreferrer" style="color:#D4872C;text-decoration:none;font-weight:600;font-size:14px;">Get Directions →</a>';
+            addrEl.parentNode.insertBefore(dirDiv, addrEl.nextSibling);
+          }
+        }, 500);
+      });
+    </script>
   </body>
 </html>
